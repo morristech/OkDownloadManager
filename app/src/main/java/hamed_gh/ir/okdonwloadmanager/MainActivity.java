@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         headers.put("uuid","1");
         headers.put("agent", "postman");
 
-        ds = new DownloadService(urlString,headers, ctx, pb);
+        ds = new DownloadService(urlString,headers, ctx, pb,tv);
 
     }
 }

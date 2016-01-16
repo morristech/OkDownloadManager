@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.io.File;
 import java.util.HashMap;
@@ -26,6 +27,7 @@ public class DownloadService extends Service {
     String downloadUrl, fileName;
     LocalBroadcastManager mLocalBroadcastManager;
     ProgressBar progressBar;
+    TextView textView;
     File sdCard = Environment.getExternalStorageDirectory();
     File dir = new File(sdCard.getAbsolutePath() + "/ir.hamed_gh.download/");
     double fileSize = 0;
@@ -38,16 +40,21 @@ public class DownloadService extends Service {
         return null;
     }
 
-    public DownloadService(String url, HashMap<String, String> headers, Context c, ProgressBar pBar) {
+    public DownloadService(String url,
+                           HashMap<String, String> headers,
+                           Context c,
+                           ProgressBar pBar,
+                           TextView tv) {
+
         if (!dir.exists()) {
             dir.mkdirs();
         }
 
         this.headers = headers;
-
         downloadUrl = url;
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(c);
         progressBar = pBar;
+        textView = tv;
         dat = new DownloadAsyncTask();
         dat.execute(new String[]{downloadUrl});
     }
@@ -89,16 +96,10 @@ public class DownloadService extends Service {
                         .addHeader("agent", "postman");
 
                 for (String key : headers.keySet()) {
-                    builder.addHeader(key,headers.get(key));
+                    builder.addHeader(key, headers.get(key));
                 }
                 Request request = builder.build();
                 Response response = client.newCall(request).execute();
-
-
-//                    InputStream is = response.body().byteStream();
-//
-//                    BufferedInputStream input = new BufferedInputStream(is);
-//            FileOutputStream fos = new FileOutputStream(new File(dir,"dummy-incomplete"),true);
 
                 File f = new File(dir, "dummy-incomplete");
 
@@ -121,41 +122,6 @@ public class DownloadService extends Service {
                 sink.writeAll(source);
                 sink.close();
 
-
-//					byte[] buffer = new byte[5000];
-//			        int bufferLength = 0;
-//			        int percentage = 0;
-//			        double downloadedSize = 0;
-//					URL url = new URL(downloadUrl);
-//					HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-//			        urlConnection.setRequestMethod("GET");
-//			        urlConnection.setConnectTimeout(10000);
-//			        urlConnection.setReadTimeout(10000);
-//			        Log.d("status","ReadTimeOut: "+urlConnection.getReadTimeout() + "ConnectTimeOut: "+urlConnection.getConnectTimeout());
-//			        long downloaded = isIncomplete();
-//			        if(downloaded > 0){
-//			        	urlConnection.setRequestProperty("Range", "bytes="+(downloaded)+"-");
-//			        	downloadedSize = downloaded;
-//			        	fileSize = downloaded;
-//			        }
-//			        urlConnection.setDoOutput(true);
-//			        urlConnection.connect();
-//			        fileSize += urlConnection.getContentLength();
-//			        FileOutputStream fos = new FileOutputStream(new File(dir,fileName+"-incomplete"),true);
-//			        InputStream inputStream = urlConnection.getInputStream();
-//			        while ( (bufferLength = inputStream.read(buffer)) > 0 )
-//		            {
-//			        	if(isCancelled()){
-//			        		break;
-//			        	}
-//			            fos.write(buffer, 0, bufferLength);
-//			            downloadedSize += bufferLength;
-//			            percentage = (int) ((downloadedSize / fileSize) * 100);
-//			            publishProgress(percentage);
-//			            //Log.d("status","downloading: " + downloadedSize+"/"+fileSize+" ("+percentage+"%)");
-//		            }
-//			        fos.close();
-//			        urlConnection.disconnect();
             } catch (Exception e) {
                 Log.e("Download Failed", "Error: " + e.getMessage());
             }
@@ -173,6 +139,13 @@ public class DownloadService extends Service {
             } else {
                 Log.w("status", "ProgressBar is null, please supply one!");
             }
+
+            if (textView != null){
+                textView.setText("%" + values[0]);
+            } else {
+                Log.d("status", "Textview is null, please supply one!");
+            }
+
         }
 
         @Override
@@ -192,7 +165,5 @@ public class DownloadService extends Service {
         protected void onCancelled() {
             mLocalBroadcastManager.sendBroadcast(new Intent("org.test.download.DOWNLOAD_CANCELLED"));
         }
-
     }
-
 }

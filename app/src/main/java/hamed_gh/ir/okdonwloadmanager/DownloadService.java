@@ -115,6 +115,9 @@ public class DownloadService extends Service {
 
                 long bytesRead = 0;
                 while (source.read(sink.buffer(), DOWNLOAD_CHUNK_SIZE) != -1) {
+                    if(isCancelled()){
+                        break;
+                    }
                     bytesRead += DOWNLOAD_CHUNK_SIZE;
                     int progress = (int) ((bytesRead * 100) / contentLength);
                     publishProgress(progress);

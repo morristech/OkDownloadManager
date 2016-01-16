@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
         ctx = this;
         final TextView tv = (TextView)findViewById(R.id.textview);
         final ProgressBar pb = (ProgressBar)findViewById(R.id.progressbar);
+
         urlString = "http://api.irangrammy.com/api/v4/en/music/11238-5e570e44ae82f0f77133aad4f7789078";
         HashMap<String,String> headers = new HashMap<>();
         headers.put("token","12-c5c856982961f5ec59cad075015409f17c2a1b99");

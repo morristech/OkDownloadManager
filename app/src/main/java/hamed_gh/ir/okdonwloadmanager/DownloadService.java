@@ -16,7 +16,9 @@ import java.util.HashMap;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import okio.BufferedSink;
+import okio.BufferedSource;
 import okio.Okio;
 
 public class DownloadService extends Service {
@@ -27,6 +29,8 @@ public class DownloadService extends Service {
     File sdCard = Environment.getExternalStorageDirectory();
     File dir = new File(sdCard.getAbsolutePath() + "/ir.hamed_gh.download/");
     double fileSize = 0;
+    public static final int DOWNLOAD_CHUNK_SIZE = 2048; //Same as Okio Segment.SIZE
+
     DownloadAsyncTask dat;
 
     @Override
@@ -90,6 +94,7 @@ public class DownloadService extends Service {
                 Request request = builder.build();
                 Response response = client.newCall(request).execute();
 
+
 //                    InputStream is = response.body().byteStream();
 //
 //                    BufferedInputStream input = new BufferedInputStream(is);
@@ -97,8 +102,23 @@ public class DownloadService extends Service {
 
                 File f = new File(dir, "dummy-incomplete");
 
+//                BufferedSink sink = Okio.buffer(Okio.sink(f));
+//                sink.writeAll(response.body().source());
+//                sink.close();
+
+                ResponseBody body = response.body();
+                long contentLength = body.contentLength();
+                BufferedSource source = body.source();
+
                 BufferedSink sink = Okio.buffer(Okio.sink(f));
-                sink.writeAll(response.body().source());
+
+                long bytesRead = 0;
+                while (source.read(sink.buffer(), DOWNLOAD_CHUNK_SIZE) != -1) {
+                    bytesRead += DOWNLOAD_CHUNK_SIZE;
+                    int progress = (int) ((bytesRead * 100) / contentLength);
+                    publishProgress(progress);
+                }
+                sink.writeAll(source);
                 sink.close();
 
 

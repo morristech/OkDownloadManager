@@ -9,12 +9,47 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="hamed_gh.ir.okdonwloadmanager.MainActivity">
 
+    <TextView
+        android:id="@+id/downloadLink_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="download link:"
+        />
+
+    <TextView
+        android:id="@+id/downloadLink_TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@id/downloadLink_text"
+        />
+
+    <TextView
+        android:id="@+id/path_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/downloadLink_TextView"
+        android:layout_marginTop="10dp"
+        android:text="path:"
+        />
+
+    <TextView
+        android:id="@+id/path_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@id/path_text"
+        />
+
     <Button
         android:id="@+id/btnStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/path_textview"
         android:layout_alignParentLeft="true"
 
         android:text="Start download" />
@@ -25,23 +60,40 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/path_textview"
         android:layout_alignParentRight="true"
 
         android:text="Pause download" />
 
     <TextView
-        android:id="@+id/textview"
+        android:id="@+id/precent_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:layout_marginTop="10dp"
+
+        android:text="precent:"
         android:layout_below="@id/btnStart"/>
+
+    <TextView
+        android:id="@+id/precent_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="2dp"
+        android:layout_toRightOf="@id/precent_text"
+        android:layout_alignBottom="@id/precent_text" />
 
     <ProgressBar
         android:id="@+id/progressbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textview"
+        android:layout_below="@id/precent_textview"
         style="?android:attr/progressBarStyleHorizontal"/>
+
+    <Button
+        android:id="@+id/browse_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/progressbar"
+        android:text="Browse"/>
 
 </RelativeLayout>

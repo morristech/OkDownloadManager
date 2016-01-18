@@ -1,4 +1,8 @@
 apply plugin: 'com.android.application'
+repositories {
+    mavenCentral()
+    maven { url 'http://guardian.github.com/maven/repo-releases' }
+}
 
 android {
     compileSdkVersion 23
@@ -11,6 +15,7 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -23,7 +28,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.11'
     compile 'com.android.support:appcompat-v7:23.1.1'
-
     compile 'com.squareup.okhttp3:mockwebserver:3.0.1'
-    compile 'com.squareup.okio:okio:1.6.0'
+    //    compile 'com.squareup.okio:okio:1.6.0'
+    compile 'net.rdrei.android.dirchooser:library:3.0'
+//    compile project(':library')
 }
